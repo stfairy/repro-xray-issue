@@ -1,0 +1,38 @@
+Reproduce steps:
+
+1. Create a new Lambda Function in AWS Console.  I named it ReproXrayIssue.
+   Turn on X-Ray active tracing.
+
+2. Create a virtualenv.  I was using Python 3.8.
+
+   $ virtualenv .env
+   $ source .env/bin/activate
+   $ pip install -r requirements.txt
+
+3. Create a package.  I prepared a bash script to do this.
+
+   $ ./package.sh
+
+4. Upload the package.
+
+   $ aws lambda update-function-code --function-name ReproXrayIssue --zip-file fileb://function.zip
+
+5. From within the AWS Console, create a dummy test event, and click "Test".
+   Observe in the "Log output" section the following error message:
+
+START RequestId: 900548a3-0fbe-4a80-ad5b-a81e026ed019 Version: $LATEST
+[ERROR]	2020-03-07T21:22:08.803Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	cannot find the current segment/subsegment, please make sure you have a segment open
+[WARNING]	2020-03-07T21:22:08.803Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	No segment found, cannot begin subsegment download_file.
+[ERROR]	2020-03-07T21:22:08.904Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	cannot find the current segment/subsegment, please make sure you have a segment open
+[WARNING]	2020-03-07T21:22:08.923Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	No segment found, cannot begin subsegment download_file.
+[ERROR]	2020-03-07T21:22:08.925Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	cannot find the current segment/subsegment, please make sure you have a segment open
+[WARNING]	2020-03-07T21:22:08.925Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	No segment found, cannot begin subsegment download_file.
+[ERROR]	2020-03-07T21:22:08.925Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	cannot find the current segment/subsegment, please make sure you have a segment open
+[WARNING]	2020-03-07T21:22:08.962Z	900548a3-0fbe-4a80-ad5b-a81e026ed019	No segment found, cannot begin subsegment download_file.
+200 102117
+200 555181
+200 1042592
+200 2504642
+END RequestId: 900548a3-0fbe-4a80-ad5b-a81e026ed019
+REPORT RequestId: 900548a3-0fbe-4a80-ad5b-a81e026ed019	Duration: 2531.23 ms	Billed Duration: 2600 ms	Memory Size: 128 MB	Max Memory Used: 86 MB	Init Duration: 357.55 ms	
+XRAY TraceId: 1-5e64107f-a0643458f3d681eac0fa2388	SegmentId: 6300864f6a1a2520	Sampled: true	
